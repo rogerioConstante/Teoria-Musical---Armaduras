@@ -1,0 +1,718 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Armadura de Clave</title>
+<style>
+
+.numero{
+	width:90px;
+	height:60px;
+	background-color:#660066;
+	font: "Space Age";
+	color:#0F0;
+	
+	
+}
+
+.armadura{
+
+	width:90px;
+	height:60px;
+	background-color:#f8f8f8;
+
+
+}
+
+.igual{
+	width:126px;
+	height:60px;
+	
+}
+
+table{
+	margin:auto;
+
+}
+
+.color_display{
+	height:25px;
+	background-color:#330033;
+	border:medium #FFF;
+	font: "Space Age";
+	color:#0F0;
+	font-size:18px;
+	text-align:center;
+	padding:5px;
+}
+
+.botao{
+	width:190px;
+	height:60px;
+	background-color:#003333;
+	border:medium #FFF;
+	font: "Space Age";
+	color:#0F0;
+	font-size:24px;
+	text-align:center;
+	padding:5px;
+}
+
+.texto{
+	font: "Arial";
+	color:#0F0;
+	font-size:20px;
+	
+}
+
+
+.titulos{
+	
+	background-color:#003333;
+	font: "Space Age";
+	color:#0F0;
+	font-size:20px;
+	text-align:center;
+	padding:5px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body background="fundo.jpg"  >
+
+<script>
+// definindo variaveis
+var tom = [
+["Do", "Re", "Mi", "Fa", "Sol", "La", "Si"],
+["","#", "b"],
+["Maior", "menor"]
+];
+var yellow = "#CCCC00";
+var tonalidade = Array;
+var iniciarSorteio = false;
+var fase = 1;
+var acertos = 0;
+var sorteios = 0;
+var x, y, z;
+var maxRegress=23;
+var regress=maxRegress;
+var myInterval;
+var passo = 2;
+var pontGeral = 0;
+var pontTempo = 0;
+var modos = 0;
+var nome = prompt("Nome:");
+var record = localStorage.getItem("record");
+var nomeRec = localStorage.getItem("nomeRec");
+
+function myTimer() {
+			
+		regress--;
+		
+		document.getElementById("display4").value="Tempo: "+regress;
+		
+		if (regress <= 0) {
+			
+			verificaSorteio();
+
+		}
+	
+}
+
+function iniciar() {
+	
+	if (!iniciarSorteio) {
+	
+	clearInterval(myInterval);
+	
+	acertos = 0;
+	
+	sorteios = 0;
+	
+	regress = maxRegress - (fase * passo);
+		
+	iniciarSorteio = true;	
+	
+	document.getElementById("display5").value="Fase "+fase;
+	
+	myInterval = setInterval(myTimer,1000);
+	
+	sortTonalidade();
+	
+	}
+	
+};
+
+function verificaSorteio() {
+
+	pontTempo = pontTempo + (5 * (regress * (fase * 0.5)));
+	
+	regress = maxRegress - (fase * passo);
+	
+	if (sorteios>=10) {
+	
+	iniciarSorteio = false;
+		
+	var porcent = (acertos * 100) / 10;			
+		
+		if (acertos>=9) {
+		
+		pontGeral = pontGeral + pontTempo + (acertos * (50 * (fase * 0.5)));
+		
+			if (modos==0) {
+				pontGeral = pontGeral * 1.8;
+			}else if (modos==2) {
+				pontGeral = pontGeral * 1.5;
+			}
+		
+		pontTempo = 0;
+		
+		fase++;
+		
+			if (fase>10) {
+			
+				alert("Parabéns! Você completou a última fase! \n" + porcent + "% de acertos!\nPontos:"+pontGeral);
+				
+				recorde();
+				
+			}else {
+			
+				alert("Parabéns! Você passou para próxima fase! \n" + porcent + "% de acertos!\nPontos:"+pontGeral);
+				
+			}
+   		
+			iniciar();   		
+   			
+   	}else {
+   		
+			clearInterval(myInterval);  
+			
+   		alert(porcent + "% de acertos.\n"+"Você não alcançou o número mínimo de acertos. \n"+"Tente novamente.\nPontos:"+pontGeral)
+   		
+   		recorde();
+				
+   	}
+   	
+   } else {
+   	sortTonalidade();
+   }
+   
+};
+	
+function recorde() {
+		
+		if (pontGeral > record) {
+			localStorage.setItem("record", pontGeral);
+			localStorage.setItem("nomeRec", nome); 
+			record = pontGeral;
+			nomeRec = nome; 
+		}
+		alert("Recorde atual: "+ nomeRec + " " + record);
+	};
+
+function sortTonalidade() {
+		
+   sorteios++
+   	
+	if (modos==1) {
+		z = 0;
+	}else if (modos==2) {
+		z = 1;
+	}else {
+		z = Math.floor(Math.random() * 2);
+	}
+	y = Math.floor(Math.random() * 3);
+	
+	
+		if (z==0 && y==1) { //tonalidades possiveis para Maior e #
+			do { 
+				x = Math.floor(Math.random() * 7);
+				
+			}	while	(x!=0 & x!=3) 	
+		
+		}else if (z==0 && y==2) { //tonalidades possiveis para Maior e bemol
+			do { 
+				x = Math.floor(Math.random() * 7);
+				
+			}	while	(x!=0 & x!=1 & x!=2 & x!=4 & x!=5 & x!=6);	
+			
+		}else if (z==1 && y==1) { //tonalidades possiveis para menor e #
+			do { 
+				x = Math.floor(Math.random() * 7);
+				
+			}	while	(x!=0 & x!=1 & x!=3 & x!=4);	
+			 
+		}else if (z==1 && y==2) { //tonalidades possiveis para menor e bemol
+			do { 
+				x = Math.floor(Math.random() * 7);
+				
+			}	while	(x!=2 & x!=5 & x!=6);	 
+			
+		}else {
+				x = Math.floor(Math.random() * 7);
+		}
+			
+			
+	tonalidade = tom[0][x] + tom[1][y] + " " + tom[2][z];
+	
+	document.getElementById("display").value=sorteios;
+	
+	document.getElementById("display1").value=acertos;
+		
+	document.getElementById("display2").value=tonalidade;
+
+}
+
+
+function escFase() {
+	
+	var respFase = prompt("Iniciar na fase?");
+	
+	fase = parseInt(respFase);
+	
+}
+
+function soMaiores() {
+	
+	modos++;
+	
+	modos = modos % 3;
+	
+	if (modos==0) {
+		modo.style.backgroundColor="#003330";
+		document.getElementById("modo").value="Maior | menor";
+	} else if (modos==1) {
+		modo.style.backgroundColor="#003333";
+		document.getElementById("modo").value="Maior";
+	} else {
+		modo.style.backgroundColor="#003336";
+		document.getElementById("modo").value="Menor";
+	}
+}
+
+
+function mudaCor(nome) {
+	
+	nome.style.backgroundColor="#ffff99";
+	
+}
+
+
+function mudaCorIni(nome) {
+	
+	if (!iniciarSorteio) {
+	nome.style.backgroundColor="#ffff99";
+	}
+}
+
+function voltaCor(nome) {
+	
+	nome.style.backgroundColor="#f8f8f8";
+	
+}
+
+function voltaCorIni(nome) {
+	
+	nome.style.backgroundColor="#660066";
+	
+}
+
+function limpaDisplay3() {
+	document.getElementById("display3").value="-";
+}
+
+
+function doMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==0 & y==0 & z==0) | (x==5 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	
+	verificaSorteio();
+	
+}
+
+function solMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==4 & y==0 & z==0) | (x==2 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+	
+}
+
+function reMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==1 & y==0 & z==0) | (x==6 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+	
+}
+
+function laMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==5 & y==0 & z==0) | (x==3 & y==1 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function miMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==2 & y==0 & z==0) | (x==0 & y==1 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function siMaior() {
+
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==6 & y==0 & z==0) | (x==4 & y==1 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function faSusMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==3 & y==1 & z==0) | (x==1 & y==1 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+
+}
+
+function doSusMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==0 & y==1 & z==0) | (x==5 & y==1 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function faMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==3 & y==0 & z==0) | (x==1 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function siBeMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==6 & y==2 & z==0) | (x==4 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function miBeMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==2 & y==2 & z==0) | (x==0 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function laBeMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==5 & y==2 & z==0) | (x==3 & y==0 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function reBeMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==1 & y==2 & z==0) | (x==6 & y==2 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function solBeMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==4 & y==2 & z==0) | (x==2 & y==2 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+function doBeMaior() {
+	
+	limpaDisplay3();
+	
+	if (iniciarSorteio) {
+		if ((x==0 & y==2 & z==0) | (x==5 & y==2 & z==1)) {
+			acertos++;
+			document.getElementById("display3").value="Correto!";
+			window.setTimeout(limpaDisplay3,2000);
+			}else {
+			document.getElementById("display3").value="Errado!";
+			window.setTimeout(limpaDisplay3,2000);
+			}
+	}else {
+	alert("Clique no botão 'Iniciar'");
+	}
+	
+	verificaSorteio();
+}
+
+
+
+</script>
+
+<table width="10" border="5">
+ <tr>
+    <td align="center" class="titulos">Sorteio</td>
+    <td align="center" class="titulos">Pontos</td>
+    <td colspan="2" align="center" class="titulos">Tonalidade</td>
+    
+  </tr>
+  <tr>
+    <td><input name="display" type="text" class="color_display" id="display" size="2"></td>
+    <td><input name="display" type="text" class="color_display" id="display1" size="2"></td>
+    <td colspan="2" align="center"><input name="display" type="text" class="color_display" id="display2" size="11"></td>
+  </tr>
+  <tr>
+    <td width="25%"><img src="imagens/0.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="doMaior()"></td>
+    <td width="25%"><img src="imagens/1s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="solMaior()"></td>
+    <td width="25%"><img src="imagens/2s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="reMaior()"></td>
+    <td width="25%"><img src="imagens/3s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="laMaior()"></td>
+  </tr>
+  <tr>
+    <td><img src="imagens/4s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="miMaior()"></td>
+    <td><img src="imagens/5s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="siMaior()"></td>
+    <td><img src="imagens/6s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="faSusMaior()"></td>
+    <td><img src="imagens/7s.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="doSusMaior()"></td>
+  </tr>
+  <tr>
+    <td><img src="imagens/1b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="faMaior()"></td>
+    <td><img src="imagens/2b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="siBeMaior()"></td>
+    <td><img src="imagens/3b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="miBeMaior()"></td>
+    <td><img src="imagens/4b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="laBeMaior()"></td>
+  </tr>
+  <tr>
+    <td><img src="imagens/5b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="reBeMaior()"></td>
+    <td><img src="imagens/6b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="solBeMaior()"></td>
+    <td><img src="imagens/7b.png" class="armadura" onmouseover=mudaCor(this) onmouseout=voltaCor(this) onclick="doBeMaior()"></td>
+    <td><input name="reset" type="button" class="numero" id="reset" value="Iniciar" onclick="iniciar()" onmouseover=mudaCorIni(this) onmouseout=voltaCorIni(this)></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><input name="display" type="text" class="color_display" id="display3" size="11"></td>
+    <td colspan="2" align="center"><input name="display" type="text" class="color_display" id="display4" size="11"></td>
+  </tr>
+   <tr>
+    <td colspan="4" align="center"><input name="display" type="text" class="color_display" id="display5" size="29"></td>
+    <
+  </tr>
+  
+</table>
+
+<table width="200" border="5">
+<tr>
+    <td><input type="button" name="modo" class="botao" id="modo" value="Maior | menor"  onclick="soMaiores()"></td>
+    <td width="50%" colspan="2" align="center"><button class="botao" onclick="escFase()">Escolher fase</button></td>
+  </tr>
+
+</table>
+
+
+<font face="Purisa">
+<p class="texto">
+Dicas:<br>
+- O último sustenido da armadura é a sensível (7ºgrau) da tonalidade Maior correspondente;</br>
+- O penúltimo bemol da armadura é a tônica (1ºgrau) da tonalidade Maior correspondente;</br>
+- Dó maior não possui acidentes na armadura;</br>
+- Fá maior possui 1 bemol na armadura;</br>
+- As tonalidades maiores são as mediantes (3ºgrau) das relativas menores;
+
+</p></font>
+
+<script>
+
+document.getElementById("display").value="-";
+document.getElementById("display1").value="-";
+document.getElementById("display2").value="-";
+document.getElementById("display3").value="-";
+document.getElementById("display4").value="Tempo";
+document.getElementById("display5").value="Fase";
+
+</script>
+
+</body>
+</html>
