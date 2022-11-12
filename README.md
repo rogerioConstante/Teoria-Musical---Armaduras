@@ -4,4 +4,5 @@ Software de auxílio ao estudo da teoria musical básica: Armaduras de Clave. É
 
 É voltado para aprendizes iniciantes de Teoria Musical.
 
+![image](https://user-images.githubusercontent.com/19985432/201471366-7ebc1de2-f12f-48a0-ad89-5243f3d8937f.png)
 
